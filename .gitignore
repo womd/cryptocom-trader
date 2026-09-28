@@ -7,3 +7,6 @@ data/
 *.sqlite
 *.db
 .pytest_cache/
+*.egg-info/
+build/
+config.toml

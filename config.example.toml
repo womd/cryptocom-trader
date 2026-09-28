@@ -1,0 +1,44 @@
+# Copy to config.toml (gitignored) and adjust. Every value here is the default.
+# Secrets (API key/secret) never go here: use .env (see .env.example).
+# Any value can also be overridden per run: --set strategy.entry_zone=0.1
+
+environment = "prod"          # "prod" | "uat" (sandbox)
+db_path = "data/trader.db"
+symbols = ["BTC_USD", "ETH_USD", "SOL_USD"]
+quote_currency = "USD"         # all symbols must share it (single cash balance)
+starting_cash = 10000.0        # paper/backtest account size
+
+[strategy]
+interval = "5m"                # decision bars
+trend_interval = "15m"         # bars for the EMA trend filter
+window_hours = 24.0            # rolling "day" for the low/high range
+min_range_pct = 0.015          # skip if (high-low)/price is below this
+entry_zone = 0.15              # buy in the bottom 15% of the range...
+exit_zone = 0.85               # ...take profit in the top 15%
+trend_filter = true
+ema_fast = 50
+ema_slow = 200
+trend_band = 0.001             # |fast-slow|/slow needed to call a trend
+slope_lookback = 4             # trend bars used for the fast-EMA slope
+rsi_period = 14
+rsi_oversold = 30.0
+require_confirmation = true    # bounce above prev high, or RSI crossing up through oversold
+max_hold_hours = 24.0
+trail_in_uptrend = true        # at the range high in an uptrend, trail instead of selling
+trail_pct = 0.01
+entry_timeout_bars = 3         # unfilled limit orders expire after this many bars
+cooldown_bars = 6              # wait after closing a position before re-entering
+
+[risk]
+max_position_pct = 0.10        # of equity, per position
+max_open_positions = 3
+stop_loss_pct = 0.015
+daily_loss_halt_pct = 0.03     # stop opening positions for the rest of the UTC day
+min_notional = 10.0
+long_only = true
+
+[fees]                         # fractions: 0.0025 = 0.25%. Set these to YOUR fee tier.
+maker = 0.0025
+taker = 0.005
+slippage = 0.0005
+half_spread = 0.0002           # backtests only (live paper uses real bid/ask)

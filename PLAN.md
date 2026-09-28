@@ -103,13 +103,17 @@ Baselines to beat in backtests: buy-and-hold, and the same rules without the tre
 
 ## Phases
 
-0. **Verify**: instrument list (stocks?), fee tier, API key permissions. Pick starter pairs.
-1. **Foundation**: config/.env, REST client + candle backfill into SQLite, market WS
-   client (heartbeat, reconnect, resubscribe), `trader record` for tick recording.
-2. **Strategy + backtester**: `MarketState`, `range_trend`, fee/slippage model, metrics
-   report. `trader backtest --symbols BTC_USD,ETH_USD --days 90`.
-3. **Paper trading**: live loop over WS → strategy → risk → paper broker. Positions and P&L
+0. **Verify** *(you, with the tools from phase 1)*: `trader instruments "TSLA|NVDA"` for
+   stocks, your fee tier (put it in `config.toml`), `trader account` for API key permissions.
+   Pick starter pairs.
+1. **Foundation** ✅: config/.env, REST client + candle backfill into SQLite, market WS
+   client (heartbeat, reconnect, resubscribe, idle timeout), `trader record` for tick recording.
+2. **Strategy + backtester** ✅: `MarketState`, `range_trend`, fee/slippage model, metrics
+   report. `trader backtest --symbols BTC_USD,ETH_USD --days 90 --compare`.
+   Still to do: parameter sweeps with walk-forward splits.
+3. **Paper trading** ✅: live loop over WS → strategy → risk → paper broker. Positions and P&L
    persist across restarts. `trader paper`, `trader status`.
+   Not yet exercised against the real exchange: the build sandbox can't reach api.crypto.com.
 4. **News logger**: RSS + optional Finnhub, symbol tagging, dedupe, stored next to prices.
    Later: event studies to see whether news predicts moves in our window.
 5. **Live execution**: signed private API, user WS order and balance updates, order
